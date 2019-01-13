@@ -17,9 +17,17 @@ import { createStackNavigator, createAppContainer, createBottomTabNavigator, cre
 
 class Home extends React.Component {
 
+    
+
     state = {
-      
-    }
+      items,
+      results: []
+    };
+    
+
+  _handleResults(results) {
+    this.setState({ results });
+  }
 
    
   
@@ -34,7 +42,17 @@ class Home extends React.Component {
             rightComponent={{ icon: 'home', color: '#fff' }}
           />
 
+
+
           <View>
+
+          <SearchBar
+          ref={(ref) => this.searchBar = ref}
+          data={items}
+          handleResults={this._handleResults}
+          showOnLoad
+        />
+
             <Text>Grand Total</Text>
           </View>
 

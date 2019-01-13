@@ -49,22 +49,45 @@ import { createStackNavigator, createAppContainer, createBottomTabNavigator } fr
 //   return (<iconComponent name={name} size={size}/>)
 // }
 
+// const tabq = createBottomTabNavigator({
+//   // Home:{screen: Home},
+//   Cart: {screen: Cart},
+// })
+const ProductNavigator = createStackNavigator({
+    Home: {
+      screen: HomeDemo,
+      navigationOptions: {
+          header: null
+      }
+    },
+  
+  Cart: {
+    screen: Cart,
+    navigationOptions: {
+      header: null
+    }
+  },
+
+  Men: {
+    screen: Men,
+    navigationOptions: {
+      header: null
+    }
+  }
+})
+
+
 const BottomTabNav = createBottomTabNavigator({
 
-  // Home: { screen: Home},
-  // Notifications: {screen: Notifications},
-  // Cart: {screen: Cart},
-  // Delivery: {screen: Delivery},
-  // Account: {screen: Account},
-
-  Home:{
-    screen: HomeDemo,
+  
+  Home: {
+    screen: ProductNavigator,  //Here call the StackNavigator as nested Navigator
     navigationOptions: {
-        tabBarLabel:"Home",
-        tabBarIcon: ({ tintColor }) => (
-          <Ionicons name="ios-home" size={20} color={tintColor}/>
-        )
-    },
+            tabBarLabel:"Home",
+            tabBarIcon: ({ tintColor }) => (
+              <Ionicons name="ios-home" size={20} color={tintColor}/>
+            )
+        },
   },
 
   Notifications: {
@@ -77,15 +100,7 @@ const BottomTabNav = createBottomTabNavigator({
     },
   },
 
-  // Cart: {
-  //   screen: Cart,
-  //   navigationOptions: {
-  //       tabBarLabel:"Cart",
-  //       tabBarIcon: ({ tintColor }) => (
-  //         <Ionicons name="md-cart" size={20} color={tintColor}/>
-  //       )
-  //   },
-  // },
+
 
   Delivery: {
     screen: Delivery,
@@ -139,8 +154,6 @@ const BottomTabNav = createBottomTabNavigator({
 
 const AppContainerBottom = createAppContainer(BottomTabNav);
 
-
-
 class NavScreen extends React.Component {
 
     static navigationOptions = {
@@ -152,7 +165,9 @@ class NavScreen extends React.Component {
   render() {
     return (
       <View style={{flex: 1}}>
-        <AppContainerBottom/>
+        
+          <AppContainerBottom/>
+        
       </View>
       
     );

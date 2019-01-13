@@ -8,9 +8,26 @@ import Modal from "react-native-modal";
 import Accordion from 'react-native-collapsible/Accordion';
 import SearchBar from 'react-native-searchbar';
 
+import Login from '../users/Login';
+import SignUp from '../users/SignUp';
+// import Home from '../screens/Home';
+import Cart from '../screens/Cart';
+import TabNavScreen from '../navigations/TabNavScreen';
+import HomeDemo from '../screens/HomeDemo'
 
-import Cart from '../screens/Cart'
-import { createStackNavigator, createAppContainer, createBottomTabNavigator, createMaterialTopTabNavigator, createDrawerNavigator } from 'react-navigation';
+// import { createStackNavigator, createAppContainer } from 'react-navigation';
+
+// const NavApp = createStackNavigator({
+//   // Login: { screen: Login},
+//   // SignUp: { screen: SignUp },
+//   // Home: { screen: Home },
+//   Cart: { screen: Cart },
+//   // TabNavScreen: {screen: TabNavScreen},
+//   // HomeDemo: {screen: HomeDemo}
+
+// });
+
+// const AppContainer = createAppContainer(NavApp);
 
 
 const SECTIONS = [
@@ -66,7 +83,7 @@ const SECTIONS = [
 
 
 class Home extends React.Component {
-
+  
     state = {
       isModalVisible: false,
       starCount: 3.5,
@@ -209,7 +226,16 @@ class Home extends React.Component {
   
       return (
         
+        
         <View style={styles.container}>
+        {/* <AppContainer/> */}
+        <SearchBar
+                  onChangeText={this.handleQueryChange}
+                  onCancel={this.handleSearchCancel}
+                  onClear={this.handleSearchClear}
+                  value={this.state.query}
+                  placeholder='Type Here...' 
+                />
           <Header style={styles.HeaderStyle}>
             <Left>
 
@@ -250,9 +276,9 @@ class Home extends React.Component {
                 
                 
 
-                <TouchableOpacity>
+                {/* <TouchableOpacity>
                   <MaterialIcons name="search" size={30}/> 
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
 
               <View>
@@ -274,7 +300,8 @@ class Home extends React.Component {
           </View>
 
           <Modal isVisible={this.state.isModalVisible}>
-              <View style={{ height: 35,flexDirection: 'row', justifyContent: 'flex-end'}}>
+              <View style={{ height: 35,flexDirection: 'row', justifyContent:'space-between',alignSelf:"flex-end"}}>
+                <Text style={{color:'#fff', fontSize: 18, fontWeight:'bold'}}>Menu</Text>
                 <TouchableOpacity onPress={this._toggleModal}>
                   <Entypo name="cross" size={30} color='#fff'/>
                 </TouchableOpacity> 
@@ -394,7 +421,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
     padding: 10,
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    paddingLeft: 5
     // flexWrap: 'wrap'
   },
 
