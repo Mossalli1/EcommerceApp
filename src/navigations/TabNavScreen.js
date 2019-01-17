@@ -1,5 +1,14 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { createStackNavigator, createAppContainer, createBottomTabNavigator } from 'react-navigation';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+
+//Redux
+import {Provider} from 'react-redux'
+import { PersistGate } from 'redux-persist/integration/react'
+
+// Reducers
+import {store, persistor} from '../redux/store/index'
 
 //Bottom Tab
 import Home from '../screens/Home';
@@ -7,20 +16,13 @@ import Notifications from '../screens/Notifications';
 import Cart from '../screens/Cart';
 import Delivery from '../screens/Delivery';
 import Account from '../screens/Account';
-
 import HomeDemo from '../screens/HomeDemo'
 import Demo from '../screens/Demo'
 
 //Top Tab
 import Men from '../screens/topTab/Men'
-
-
-
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-// import Icon from 'react-native-vector-icons/FontAwesome';
-// import { Icon } from 'react-native-elements'
-
-import { createStackNavigator, createAppContainer, createBottomTabNavigator } from 'react-navigation';
+import ProductsDetails from '../screens/ProductsDetails'
+import ProductsDetailsScreen from '../screens/ProductDetailsScreen'
 
 
 // const getTabBarIcon = (navigation, focused, tintColor) => {
@@ -53,6 +55,8 @@ import { createStackNavigator, createAppContainer, createBottomTabNavigator } fr
 //   // Home:{screen: Home},
 //   Cart: {screen: Cart},
 // })
+
+
 const ProductNavigator = createStackNavigator({
     Home: {
       screen: HomeDemo,
@@ -73,7 +77,30 @@ const ProductNavigator = createStackNavigator({
     navigationOptions: {
       header: null
     }
+  },
+
+  ProductsDetails: {
+    screen: ProductsDetails,
+    navigationOptions:{
+      header: null,
+      headerStyle :{
+        // height :20,
+        // backgroundColor: 'red'
+    },
+    }
+  },
+
+  ProductsDetailsScreen: {
+    screen: ProductsDetailsScreen,
+    navigationOptions:{
+      header: null,
+      headerStyle :{
+        // height :20,
+        // backgroundColor: 'red'
+    },
+    }
   }
+
 })
 
 
@@ -154,6 +181,7 @@ const BottomTabNav = createBottomTabNavigator({
 
 const AppContainerBottom = createAppContainer(BottomTabNav);
 
+
 class NavScreen extends React.Component {
 
     static navigationOptions = {
@@ -164,11 +192,12 @@ class NavScreen extends React.Component {
     
   render() {
     return (
-      <View style={{flex: 1}}>
-        
-          <AppContainerBottom/>
-        
-      </View>
+      
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <AppContainerBottom />
+        </PersistGate>
+      </Provider>
       
     );
   }

@@ -1,12 +1,17 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, Image,TouchableOpacity,TouchableWithoutFeedback } from 'react-native';
+import { Button, StyleSheet, Text, View, ScrollView, Image,TouchableOpacity,TouchableWithoutFeedback } from 'react-native';
 import { Ionicons, MaterialIcons, FontAwesome, Foundation, Entypo } from '@expo/vector-icons';
-import { Rating, List, ListItem } from 'react-native-elements';
-
-import {Header, Left,Container, Body, Right,Button} from 'native-base';
+import {  Rating, List, ListItem } from 'react-native-elements';
+import {Header, Left,Container, Body, Right} from 'native-base';
 import Modal from "react-native-modal";
 import Accordion from 'react-native-collapsible/Accordion';
-import SearchBar from 'react-native-searchbar';
+// import SearchBar from 'react-native-searchbar';
+import SearchBar from 'react-native-material-design-searchbar';
+import Display from 'react-native-display';
+
+//Redux
+import {bindActionCreators} from 'redux'
+import {connect} from 'react-redux'
 
 import Login from '../users/Login';
 import SignUp from '../users/SignUp';
@@ -14,6 +19,9 @@ import SignUp from '../users/SignUp';
 import Cart from '../screens/Cart';
 import TabNavScreen from '../navigations/TabNavScreen';
 import HomeDemo from '../screens/HomeDemo'
+
+import { ManList } from '../data/Data';
+import { addProducts , productDetails } from '../redux/actions';
 
 // import { createStackNavigator, createAppContainer } from 'react-navigation';
 
@@ -81,42 +89,23 @@ const SECTIONS = [
   },
 ];
 
+type Props = {
+  addProductList: (value: []) => void,
+  ProductState: any
 
-class Home extends React.Component {
+}
+class Home extends React.Component<Props> {
   
     state = {
+      enable: false,
+      enable2: true,
       isModalVisible: false,
       starCount: 3.5,
       activeSections: [],
       query: "",
       SECTIONS,
       results: [],
-      menList : [
-        {
-          id : 'Shirt', item : 'Yellow', price : '1150/-', type : 'Cloath',
-          image : 'https://static1.cilory.com/290167-large_default/pepe-jeans-blue-reversible-casual-shirt.jpg'
-        },
-        {
-          id : 'Panjabi', item : 'Estacy', price : '1150/-', type : 'Cloath',
-          image : 'https://www.aamio.com/file/2017/05/Cotton-Exclusive-Men-Printed-Panjabi-with-Contrasted-Collar-and-Placket-LMP112-1.jpg'
-        },
-        {
-          id : 'Pant', item : 'Rich Man', price : '1150/-', type : 'Cloath',
-          image : 'https://images.express.com/is/image/expressfashion/0035_04769232_1378_f01?cache=on&wid=960&fmt=jpeg&qlt=85,1&resmode=sharp2&op_usm=1,1,5,0&defaultImage=Photo-Coming-Soon'
-        },
-        {
-          id : 'Fotua', item : 'Sailors', price : '1150/-', type : 'Cloath',
-          image : 'https://www.upoharbd.com/images/uploads/cotton_karchupi_offWhite2.jpg'
-        },
-        {
-          id : 'Shoes', item : 'Aarong', price : '1150/-', type : 'Cloath',
-          image : 'https://image.sportsmansguide.com/adimgs/l/5/582387_ts.jpg'
-        },
-        {
-          id : 'Polo Shirt', item : 'Yellow', price : '1150/-', type : 'Cloath',
-          image : 'https://cdn.shopify.com/s/files/1/1368/9289/products/IvaUxv8Tb2M3TXLnEDj1_WoWs_Polo_front.jpg?v=1511458421'
-        }
-      ]
+      menList: ManList,
     }
 
     // _renderSectionTitle = section => {
@@ -126,6 +115,18 @@ class Home extends React.Component {
     //     </View>
     //   );
     // };
+    componentDidMount() {
+      this.props.addProductList(ManList)
+    }
+
+    toggleDisplay() {
+      let toggle = !this.state.enable;
+      this.setState({enable: toggle});
+
+      let toggle2 = this.state.enable;
+      this.setState({enable2: toggle2});
+      
+    }
   
     _renderHeader = section => {
       return (
@@ -164,6 +165,10 @@ class Home extends React.Component {
       });
     }
 
+    alt1 = alt1 => {
+      alert('Gf')
+    };
+
     
   
 
@@ -180,40 +185,46 @@ class Home extends React.Component {
     // handleSearchClear = () => this.handleQueryChange(""); 
 
   lapsList(){
+
     return this.state.menList.map((data,i) =>{
       return(
         
         <View key={i}>
-        
-          <View style={styles.elements}>
 
-              <View style={styles.images}>
-                <Image
-                  style={{width: 100, height: 100}}
-                  source={{uri: data.image}}
-                />
-              </View>
+            <TouchableOpacity onPress={()=> this.props.product_details(i)} onPressIn={()=> this.props.navigation.navigate('ProductsDetails')}>
+
+                <View style={styles.elements}>
+                    <View style={styles.images}>
+                      <Image
+                        style={{width: 100, height: 100}}
+                        source={{uri: data.image}}
+                        // onPress={()=> this.props.product_details(i)} 
+                        onPress={this.alt1}
+                      />
+                    </View>
 
 
-              <View style= {styles.texes}>
-                  <Text style={styles.text_element_id}>{data.id}</Text>
-                  <Text style={styles.text_element_item}>by {data.item}</Text>
-                  <Text style={styles.text_element_item}>Type: {data.type}</Text>
-                  <Text style={styles.text_element_price}>Price : {data.price}</Text>
+                    <View style= {styles.texes}>
+                        <Text style={styles.text_element_id}>{data.id}</Text>
+                        <Text style={styles.text_element_item}>by {data.item}</Text>
+                        <Text style={styles.text_element_item}>Type: {data.type}</Text>
+                        <Text style={styles.text_element_price}>Price : {data.price}</Text>
+                        
+                        {/* <Rating                                                 //------Rating Add
+                          // fractions={1}
+                          startingValue={2.6}
+                          readonly
+                          imageSize={20}
+                          onFinishRating={this.ratingCompleted}
+                          onStartRating={this.ratingStarted}
+                          style={{ paddingVertical: 10 }}
+                        />  */}
+                        
+                    </View>
+                </View>
 
-                  
-                  <Rating                                                 //------Rating Add
-                    // fractions={1}
-                    startingValue={2.6}
-                    readonly
-                    imageSize={20}
-                    onFinishRating={this.ratingCompleted}
-                    onStartRating={this.ratingStarted}
-                    style={{ paddingVertical: 10 }}
-                  /> 
-              </View>
-
-          </View>
+              </TouchableOpacity>
+            
 
         </View>
       )
@@ -223,75 +234,77 @@ class Home extends React.Component {
   
   
     render() {
-  
+      console.log("Print props===========> ", this.props)
+      this.props.addProduct()
       return (
         
         
         <View style={styles.container}>
-        {/* <AppContainer/> */}
-        <SearchBar
-                  onChangeText={this.handleQueryChange}
-                  onCancel={this.handleSearchCancel}
-                  onClear={this.handleSearchClear}
-                  value={this.state.query}
-                  placeholder='Type Here...' 
-                />
-          <Header style={styles.HeaderStyle}>
-            <Left>
 
-              <TouchableOpacity onPress={this._toggleModal}>
-                <Ionicons name="ios-menu" size={30}/> 
-              </TouchableOpacity>
+              <Display 
+                enable={this.state.enable} 
+                enterDuration={500} 
+                exitDuration={250}
+                // exit="fadeOutLeft"
+                // enter="fadeInLeft"
+              >
+                  <View>
+                    <SearchBar
+                      // onSearchChange={() => console.log('On Search Change')}
+                      height={30}
+                      // onFocus={() => console.log('On Focus')}
+                      // onBlur={() => console.log('On Blur')}
+                      placeholder={'Search...'}
+                      // autoCorrect={false}
+                      padding={5}
+                      returnKeyType={'search'}
+                      onBackPress={this.toggleDisplay.bind(this)}
+                      // alwaysShowBackButton={true}
+                      />
 
-            </Left>
+                   
+                  </View>
+              </Display>
 
 
-            <Body style={{ alignItems:'center'}}>
-                <Text style={{fontSize:18, fontWeight: 'bold'}}>New Items</Text>
-            </Body>
+              <Display 
+                enable={this.state.enable2} 
+                enterDuration={500} 
+                exitDuration={250}
+                // exit="fadeOutLeft"
+                // enter="fadeInLeft"
+              >
+
+                  <Header style={styles.HeaderStyle}>
+                      <Left>
+                          <TouchableOpacity onPress={this._toggleModal}>
+                            <Ionicons name="ios-menu" size={30}/> 
+                          </TouchableOpacity>
+                      </Left>
 
 
-            <Right>
+                      <Body style={{ alignItems:'center'}}>
+                          <Text style={{fontSize:18, fontWeight: 'bold'}}>New Items</Text>
+                      </Body>
 
-              <View>
 
-                {/* <SearchBar
-                  ref={(ref) => this.searchBar = ref}
-                  data={SECTIONS}
-                  handleResults={this._handleResults}
-                  showOnLoad
-                /> */}
+                      <Right>
+                          <View style={{paddingRight:10}}>
+                            <TouchableOpacity onPress={this.toggleDisplay.bind(this)}>
+                              <MaterialIcons name="search" size={30}/> 
+                            </TouchableOpacity>
+                          </View>
 
-                {/* <SearchBar
-                  onChangeText={this.handleQueryChange}
-                  onCancel={this.handleSearchCancel}
-                  onClear={this.handleSearchClear}
-                  value={this.state.query}
-                  placeholder='Type Here...' 
-                /> */}
+                          <View>
+                            <TouchableOpacity onPress = {()=> this.props.navigation.navigate('Cart')}>
+                              <Ionicons name="md-cart" size={30}/> 
+                            </TouchableOpacity>
+                          </View>
+                      </Right>
+                  </Header> 
+                 
+              </Display>
 
-                {/* <TouchableOpacity onPress={() => this.searchBar.show()}>
-                  <View style={{ backgroundColor: 'green', height: 10, marginTop: 10 }}/>
-                </TouchableOpacity> */}
-                
-                
-
-                {/* <TouchableOpacity>
-                  <MaterialIcons name="search" size={30}/> 
-                </TouchableOpacity> */}
-              </View>
-
-              <View>
-
-                <TouchableOpacity onPress = {()=> this.props.navigation.navigate('Cart')}>
-                  <Ionicons name="md-cart" size={30}/> 
-                </TouchableOpacity>
-
-              </View>
-              
-            </Right>
-
-          </Header>
 
           <View style={{flex:4}}>
             <ScrollView>
@@ -330,7 +343,24 @@ class Home extends React.Component {
   
 }
 
-export default Home;
+// export default Home;
+function mapStateToProps(state) {
+  return {
+    ProductState: state.productList
+  }
+}
+function mapDispatchToProps(dispatch) {
+  const actions = {
+    addProduct: (value) => ({
+      type: "Add_To_ProductDetails",
+      payload: value
+    }),
+    product_details: (index: string) => productDetails(index),
+    addProductList: (list:[]) => addProducts(list),
+  }
+  return bindActionCreators(actions, dispatch)
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Home)
 
 const styles = StyleSheet.create({
   container: {

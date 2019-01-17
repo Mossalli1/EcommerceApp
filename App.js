@@ -20,7 +20,8 @@ export default class App extends React.Component {
   async componentDidMount() {
     await Font.loadAsync({
       // FontAwesome,    //Adding FontAwesome
-      MaterialIcons: require('./node_modules/@expo/vector-icons/fonts/MaterialIcons.ttf')
+      MaterialIcons: require('./node_modules/@expo/vector-icons/fonts/MaterialIcons.ttf'),
+      Ionicons: require('./node_modules/@expo/vector-icons/fonts/Ionicons.ttf')
       // Entypo          //Adding Entypo
     });
     this.setState({fontLoaded: true});

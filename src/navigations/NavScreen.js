@@ -10,7 +10,7 @@ import { createStackNavigator, createAppContainer } from 'react-navigation';
 
 
 const NavApp = createStackNavigator({
-  Login: { screen: Login},
+  Login: { screen: TabNavScreen},
   SignUp: { screen: SignUp },
   Home: { screen: Home },
   Cart: { screen: Cart },
