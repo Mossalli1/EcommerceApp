@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, StyleSheet, Text, View, ScrollView, Image,TouchableOpacity,TouchableWithoutFeedback } from 'react-native';
+import {Dimensions, Button, StyleSheet, Text, View, ScrollView, Image,TouchableOpacity,TouchableWithoutFeedback } from 'react-native';
 import { Ionicons, MaterialIcons, FontAwesome, Foundation, Entypo } from '@expo/vector-icons';
 import {  Rating, List, ListItem } from 'react-native-elements';
 import {Header, Left,Container, Body, Right} from 'native-base';
@@ -24,26 +24,9 @@ import { ManList } from '../data/Data';
 import { productDetails } from '../redux/actions';
 
 
+var {width} = Dimensions.get('window');
 
 class ProductsDetails extends React.Component {
-
-  // constructor(props) {
-  //   super(props);
-
-  //   this.state = {
-  //     items: [],
-  //   };
-
-  //   store.subscribe(() => {
-  //     // When state will be updated(in our case, when items will be fetched), 
-  //     // we will update local component state and force component to rerender 
-  //     // with new data.
-
-  //     this.setState({
-  //       items: store.getState().items
-  //     });
-  //   });
-  // }
   
     state = {
       enable: false,
@@ -88,34 +71,7 @@ class ProductsDetails extends React.Component {
     // handleSearchCancel = () => this.handleQueryChange("");
     // handleSearchClear = () => this.handleQueryChange(""); 
 
-  // lapsList(){
-  //   return this.props.product_details.map((data,i) =>{
-  //     return(
-        
-  //       <View key={i}>
-
-  //               <View style={styles.elements}>
-  //                   <View style={styles.images}>
-  //                     <Image
-  //                       style={{width: 100, height: 100}}
-  //                       source={{uri: data.image}}
-  //                     />
-  //                   </View>
-
-
-  //                   <View style= {styles.texes}>
-  //                       <Text style={styles.text_element_id}>{data.id}</Text>
-  //                   </View>
-  //               </View>
-
-
-  //       </View>
-  //     )
-  //   })
-  // }
     
-  
-  
     render() {
       console.log("Product Details,,,,", this.props.ProductState)
       return (
@@ -189,18 +145,40 @@ class ProductsDetails extends React.Component {
             /> */}
           </View>
 
+
+
           <View style={{flex:4}}>
                     {/* <View style= {styles.texes}>
                       <Text>Hello {this.props.ProductState && this.props.ProductState.id}</Text>
                         <Text>Details</Text>
                     </View> */}
-
-              <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
-                <Image
-                  style={{width: 300, height: 190}}
-                  source={{uri: this.props.ProductState && this.props.ProductState.image}}
-                />
-              </View>
+              <ScrollView horizontal={true} pagingEnabled={true}>
+                
+                    {this.props.ProductState && this.props.ProductState.image.map((images, index)=>{
+                      return(
+                        <View key={index} style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
+                        <Image 
+                          style={{flex: 1, width: width * 1, height: 150, resizeMode: 'contain'}}
+                          source={{uri: images}}
+                        />
+                        </View> 
+                      )
+                    })}
+                
+                {/* <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
+                  <Image
+                    style={{flex: 1, width: 500, height: 500, resizeMode: 'contain'}}
+                    source={{uri: this.props.ProductState && this.props.ProductState.image[0]}}
+                  />
+                </View> */}
+              
+                {/* <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
+                  <Image
+                    style={{flex: 1, width: 500, height: 500, resizeMode: 'contain'}}
+                    source={{uri: this.props.ProductState && this.props.ProductState.image[1]}}
+                  />
+                </View> */}
+              </ScrollView>
               <View style={{flex:1}}>
               <ScrollView>
                   <Text style={styles.text_element_id}>{this.props.ProductState && this.props.ProductState.id}</Text>
@@ -208,6 +186,15 @@ class ProductsDetails extends React.Component {
                   <Text style={styles.text_element_item}>Type: {this.props.ProductState && this.props.ProductState.type}</Text>
                   <Text style={styles.text_element_price}>Price : {this.props.ProductState && this.props.ProductState.price}</Text>
                   <Text style={styles.text_element_price}>Abilability : {this.props.ProductState && this.props.ProductState.abilableStatus}</Text>
+                  <Text style={styles.text_element_price}>Size : {this.props.ProductState && this.props.ProductState.size.join(', ')}</Text>
+                  <Text style={styles.text_element_price}>Size : {this.props.ProductState && this.props.ProductState.size[0]}</Text>
+                  <Text style={styles.text_element_price}>32 : {this.props.ProductState && this.props.ProductState.sizeAvailale.ThirtyTwo}</Text>
+
+                  {/* <Image
+                  style={{flex: 1, width: 50, height: 50, resizeMode: 'contain'}}
+                  source={{uri: this.props.ProductState && this.props.ProductState.image}}
+                /> */}
+
               </ScrollView>
                   
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, StyleSheet, Text, View, ScrollView, Image,TouchableOpacity,TouchableWithoutFeedback } from 'react-native';
+import { Dimensions, Button, StyleSheet, Text, View, ScrollView, Image,TouchableOpacity,TouchableWithoutFeedback } from 'react-native';
 import { Ionicons, MaterialIcons, FontAwesome, Foundation, Entypo } from '@expo/vector-icons';
 import {  Rating, List, ListItem } from 'react-native-elements';
 import {Header, Left,Container, Body, Right} from 'native-base';
@@ -23,21 +23,8 @@ import HomeDemo from '../screens/HomeDemo'
 import { ManList } from '../data/Data';
 import { addProducts , productDetails } from '../redux/actions';
 
-// import { createStackNavigator, createAppContainer } from 'react-navigation';
 
-// const NavApp = createStackNavigator({
-//   // Login: { screen: Login},
-//   // SignUp: { screen: SignUp },
-//   // Home: { screen: Home },
-//   Cart: { screen: Cart },
-//   // TabNavScreen: {screen: TabNavScreen},
-//   // HomeDemo: {screen: HomeDemo}
-
-// });
-
-// const AppContainer = createAppContainer(NavApp);
-
-
+var {width} = Dimensions.get('window');
 const SECTIONS = [
   {
     title: 'Men',
@@ -188,45 +175,54 @@ class Home extends React.Component<Props> {
 
     return this.state.menList.map((data,i) =>{
       return(
-        
-        <View key={i}>
+            <View key={i}>
+                <TouchableOpacity onPress={()=> this.props.product_details(i)} onPressIn={()=> this.props.navigation.navigate('ProductsDetails')}>
 
-            <TouchableOpacity onPress={()=> this.props.product_details(i)} onPressIn={()=> this.props.navigation.navigate('ProductsDetails')}>
+                    <View style={styles.elements}>
+                    
+                        <View style={styles.images}>
+                          <Image
+                            style={{width: 90, height: 100 ,resizeMode:"contain"}}
+                            source={{uri: data.image[0]}}
+                            // onPress={()=> this.props.product_details(i)} 
+                            onPress={this.alt1}
+                          />
+                        </View>
 
-                <View style={styles.elements}>
-                    <View style={styles.images}>
-                      <Image
-                        style={{width: 100, height: 100}}
-                        source={{uri: data.image}}
-                        // onPress={()=> this.props.product_details(i)} 
-                        onPress={this.alt1}
-                      />
+
+                        <View style= {styles.texes}>
+                            <Text style={styles.text_element_id}>{data.title}</Text>
+                            <Text style={styles.text_element_item}>Colors : {data.color.join(', ')}</Text>
+                            <Text style={styles.text_element_item}>Type: {data.type}</Text>
+                            <Text style={styles.text_element_price}>Price : {data.price}</Text>
+                            
+                            {/* <Rating                                                 //------Rating Add
+                              // fractions={1}
+                              startingValue={2.6}
+                              readonly
+                              imageSize={20}
+                              onFinishRating={this.ratingCompleted}
+                              onStartRating={this.ratingStarted}
+                              style={{ paddingVertical: 10 }}
+                            />  */}
+                            
+                        </View>
+
+                        <View style={styles.discount}>
+                          <Image
+                            style={{width: 90, height: 50, resizeMode:"contain"}}
+                            source={require('../../assets/discount.png')}
+                            // onPress={()=> this.props.product_details(i)} 
+                            // onPress={this.alt1}
+                          />
+
+                        </View>
+
+
                     </View>
 
-
-                    <View style= {styles.texes}>
-                        <Text style={styles.text_element_id}>{data.id}</Text>
-                        <Text style={styles.text_element_item}>by {data.item}</Text>
-                        <Text style={styles.text_element_item}>Type: {data.type}</Text>
-                        <Text style={styles.text_element_price}>Price : {data.price}</Text>
-                        
-                        {/* <Rating                                                 //------Rating Add
-                          // fractions={1}
-                          startingValue={2.6}
-                          readonly
-                          imageSize={20}
-                          onFinishRating={this.ratingCompleted}
-                          onStartRating={this.ratingStarted}
-                          style={{ paddingVertical: 10 }}
-                        />  */}
-                        
-                    </View>
-                </View>
-
-              </TouchableOpacity>
-            
-
-        </View>
+                  </TouchableOpacity>
+            </View>
       )
     })
   }
@@ -369,6 +365,7 @@ const styles = StyleSheet.create({
   },
 
   elements: {
+    flex: 1,
     flexWrap : 'wrap',
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -379,6 +376,7 @@ const styles = StyleSheet.create({
 
   text_element_id : {
     fontSize: 15,
+    fontWeight: 'bold'
     // textAlign: "center",
     // color: "#FFFFFF",
   },
@@ -402,15 +400,24 @@ const styles = StyleSheet.create({
 
   images :{
     height : 110,
-    width : 110,
-    marginBottom : 5,
+    width : width * 0.3,
+    // marginBottom : 5,
   },
 
   texes :{
     height : 110,
-    width : 180,
-    marginBottom : 5,
-    paddingLeft: 30,
+    width : width * 0.45,
+    // marginBottom : 5,
+    // paddingLeft: 30,
+  },
+
+  discount:{
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    height : 110,
+    width : width * 0.2,
+    // backgroundColor: 'red',
+    marginBottom : 5
   },
 
   myStarStyle: {
