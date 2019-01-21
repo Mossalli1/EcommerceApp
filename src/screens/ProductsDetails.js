@@ -1,10 +1,8 @@
 import React from 'react';
 import {Dimensions, Button, StyleSheet, Text, View, ScrollView, Image,TouchableOpacity,TouchableWithoutFeedback } from 'react-native';
-import { Ionicons, MaterialIcons, FontAwesome, Foundation, Entypo } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons, FontAwesome, Foundation, Entypo,AntDesign } from '@expo/vector-icons';
 import {  Rating, List, ListItem } from 'react-native-elements';
 import {Header, Left,Container, Body, Right} from 'native-base';
-import Modal from "react-native-modal";
-import Accordion from 'react-native-collapsible/Accordion';
 // import SearchBar from 'react-native-searchbar';
 import SearchBar from 'react-native-material-design-searchbar';
 import Display from 'react-native-display';
@@ -13,15 +11,10 @@ import Display from 'react-native-display';
 import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'
 
-import Login from '../users/Login';
-import SignUp from '../users/SignUp';
-// import Home from '../screens/Home';
-import Cart from '../screens/Cart';
-import TabNavScreen from '../navigations/TabNavScreen';
-import HomeDemo from '../screens/HomeDemo'
-
 import { ManList } from '../data/Data';
+import Swiper from 'react-native-swiper';
 import { productDetails } from '../redux/actions';
+import { Dropdown } from 'react-native-material-dropdown';
 
 
 var {width} = Dimensions.get('window');
@@ -37,8 +30,27 @@ class ProductsDetails extends React.Component {
       results: [],
       menList: ManList,
       items: [],
+      quantity: 1,
+    }
+
+
+//>>>>>>>>>>>Functions For Increament and Decreament Quantity<<<<<<<<<<<<
+
+    increaseQuantity=()=>{
+      if(this.state.quantity<10){
+          this.setState({quantity:this.state.quantity +1})
+      }
+    }
+
+    decreaseQuantity=()=>{
+      if(this.state.quantity>0){
+        this.setState({quantity:this.state.quantity -1})
+      }
     }
     
+
+
+//>>>>>>>>>Functions for Show Hide Search bar<<<<<<<<<<<<
 
     toggleDisplay() {
       let toggle = !this.state.enable;
@@ -46,17 +58,18 @@ class ProductsDetails extends React.Component {
 
       let toggle2 = this.state.enable;
       this.setState({enable2: toggle2});
-      
-    }
-  
-
-    onStarRatingPress(rating) {
-      this.setState({
-        starCount: rating
-      });
     }
 
-    
+
+//>>>>>>Mapping Color & Size For Drop Down which are called into render<<<<<<<<<
+
+    getColor() {
+      return this.props.ProductState && this.props.ProductState.color.map( color => ({value: color}));
+    }
+
+    getSize() {
+      return this.props.ProductState && this.props.ProductState.size.map( color => ({value: color}));
+    }
   
 
     //Search Methods
@@ -73,13 +86,23 @@ class ProductsDetails extends React.Component {
 
     
     render() {
-      console.log("Product Details,,,,", this.props.ProductState)
+
+//>>>>>>>>>>Calling  Maping Function for Dropdown in variable<<<<<<<<<<<<<
+
+      const size = this.getSize();
+      const color = this.getColor();
+
+      
+      console.log("Product Details,,,,", this.props)
       return (
         
         
         <View style={styles.container}>
 
-              <Display 
+{/* >>>>>>>>>>>>>>Search bar Displaying<<<<<<<<<<<<<<< */}
+
+
+              {/* <Display 
                 enable={this.state.enable} 
                 enterDuration={500} 
                 exitDuration={250}
@@ -102,7 +125,7 @@ class ProductsDetails extends React.Component {
 
                    
                   </View>
-              </Display>
+              </Display> */}
 
 
               
@@ -115,16 +138,16 @@ class ProductsDetails extends React.Component {
                       </Left>
 
 
-                      <Body style={{ alignItems:'center'}}>
-                          <Text style={{fontSize:18, fontWeight: 'bold'}}>New Items</Text>
+                      <Body style={{ alignItems:'flex-end',}}>
+                          <Text style={{fontSize:18, fontWeight: 'bold'}}>{this.props.ProductState && this.props.ProductState.name}</Text>
                       </Body>
 
 
                       <Right>
                           <View style={{paddingRight:10}}>
-                            <TouchableOpacity onPress={this.toggleDisplay.bind(this)}>
+                            {/* <TouchableOpacity onPress={this.toggleDisplay.bind(this)}>
                               <MaterialIcons name="search" size={30}/> 
-                            </TouchableOpacity>
+                            </TouchableOpacity> */}
                           </View>
 
                           <View>
@@ -134,70 +157,263 @@ class ProductsDetails extends React.Component {
                           </View>
                       </Right>
                   </Header> 
-          <View>
-            {/* <SearchBar
-              ref={(ref) => this.searchBar = ref}
-              // data={items}
-              // handleResults={this._handleResults}
-              // showOnLoad
-              heightAdjust={0}
-
-            /> */}
-          </View>
-
 
 
           <View style={{flex:4}}>
-                    {/* <View style= {styles.texes}>
-                      <Text>Hello {this.props.ProductState && this.props.ProductState.id}</Text>
-                        <Text>Details</Text>
-                    </View> */}
-              <ScrollView horizontal={true} pagingEnabled={true}>
-                
-                    {this.props.ProductState && this.props.ProductState.image.map((images, index)=>{
-                      return(
-                        <View key={index} style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
-                        <Image 
-                          style={{flex: 1, width: width * 1, height: 150, resizeMode: 'contain'}}
-                          source={{uri: images}}
-                        />
-                        </View> 
-                      )
-                    })}
-                
-                {/* <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
-                  <Image
-                    style={{flex: 1, width: 500, height: 500, resizeMode: 'contain'}}
-                    source={{uri: this.props.ProductState && this.props.ProductState.image[0]}}
-                  />
-                </View> */}
-              
-                {/* <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
-                  <Image
-                    style={{flex: 1, width: 500, height: 500, resizeMode: 'contain'}}
-                    source={{uri: this.props.ProductState && this.props.ProductState.image[1]}}
-                  />
-                </View> */}
-              </ScrollView>
-              <View style={{flex:1}}>
-              <ScrollView>
-                  <Text style={styles.text_element_id}>{this.props.ProductState && this.props.ProductState.id}</Text>
-                  <Text style={styles.text_element_item}>by {this.props.ProductState && this.props.ProductState.item}</Text>
-                  <Text style={styles.text_element_item}>Type: {this.props.ProductState && this.props.ProductState.type}</Text>
-                  <Text style={styles.text_element_price}>Price : {this.props.ProductState && this.props.ProductState.price}</Text>
-                  <Text style={styles.text_element_price}>Abilability : {this.props.ProductState && this.props.ProductState.abilableStatus}</Text>
-                  <Text style={styles.text_element_price}>Size : {this.props.ProductState && this.props.ProductState.size.join(', ')}</Text>
-                  <Text style={styles.text_element_price}>Size : {this.props.ProductState && this.props.ProductState.size[0]}</Text>
-                  <Text style={styles.text_element_price}>32 : {this.props.ProductState && this.props.ProductState.sizeAvailale.ThirtyTwo}</Text>
+               <View style={{height: 150}}>
 
-                  {/* <Image
-                  style={{flex: 1, width: 50, height: 50, resizeMode: 'contain'}}
-                  source={{uri: this.props.ProductState && this.props.ProductState.image}}
-                /> */}
 
-              </ScrollView>
+{/* >>>>>>>>>>>>>>>>Slider by ScroolView<<<<<<<<<<<<<<<<<<<<<<< */}
+
+
+                    {/* <ScrollView horizontal={true} pagingEnabled={true} showsButtons={true}>
+                      
+                          {this.props.ProductState && this.props.ProductState.image.map((images, index)=>{
+                            return(
+                              <View key={index} style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
+                              <Image 
+                                style={{flex: 1, width: width * 1, height: 150, resizeMode: 'contain'}}
+                                source={{uri: images}}
+                              />
+                              </View> 
+                            )
+                          })}
+                    </ScrollView> */}
+
+
+
+{/* >>>>>>>>>>>>>>>>> Slider By react nativ Swiper<<<<<<<<<<<<<<<<< */}
+
+
+                    {
+                      this.props.ProductState ? <Swiper showsButtons={true} >
+                      
+                      {this.props.ProductState.image.map((images, index)=>{
+                          return(
+                              <View key={index} style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
+                                <Image 
+                                    style={{flex: 1, width: width * 1, height: 150, resizeMode: 'contain'}}
+                                    source={{uri: images}}
+                                  />
+                                </View> 
+                            )
+                      })}
                   
+                    </Swiper> : null
+                    }
 
+
+              </View>    
+
+              
+
+
+              <View style={{flex:1, paddingLeft: 12, paddingRight: 12, paddingTop: 5}}>
+                  <ScrollView>
+
+                      <View style={{flexDirection: 'row', justifyContent: 'space-between',          marginBottom: 4,}}>
+                        <View>
+                            <Text style={styles.text_element_id}>{this.props.ProductState && this.props.ProductState.title}</Text>
+                        </View>
+
+
+
+ {/* >>>>>>>>>>>>>Rating Display<<<<<<<<<<<<<  */}
+
+
+
+                        <View>
+                              <Rating 
+                                // fractions={1}
+                                startingValue={this.props.ProductState && this.props.ProductState.rating}
+                                readonly
+                                imageSize={20}
+                                onFinishRating={this.ratingCompleted}
+                                onStartRating={this.ratingStarted}
+                                // style={{ paddingVertical: 10 }}
+                              /> 
+                        </View>
+                      </View>
+                      
+
+
+
+
+
+
+                      <Text style={styles.text_element_item}>Model :  {this.props.ProductState && this.props.ProductState.model}</Text>
+
+                      <Text style={styles.text_element_item}>Details : {this.props.ProductState && this.props.ProductState.details}</Text>
+
+                      <Text style={styles.text_element_item}>Color : {this.props.ProductState && this.props.ProductState.color.join(', ')}</Text>
+
+                      <Text style={styles.text_element_item}>Stock : {this.props.ProductState && this.props.ProductState.avilableStatus}</Text>
+
+                      <Text style={styles.text_element_item}>Discount : {this.props.ProductState && this.props.ProductState.discount}</Text>
+
+                      <View style={{flexDirection: 'row', justifyContent: 'space-between',        marginBottom: 4,}}> 
+                        
+                        <View>
+                             <Text style={styles.text_element_size}>Size : {this.props.ProductState && this.props.ProductState.size.join(', ')}</Text>
+
+                            <Text style={styles.text_element_price}>Price : {this.props.ProductState && this.props.ProductState.price}</Text>
+                        </View>
+
+                        <View style={{paddingRight: 3}}>
+                            {/* <Image
+                          style={{flex: 1, width: 50, height: 50, resizeMode: 'contain', borderRadius: 15 , backgroundColor: '#00b8d4'}}
+                          source={require('../../assets/chat.png')}
+                        /> */}
+                           <Ionicons name="md-chatboxes" size={50} color="#00b8d4"/>
+                        </View>
+                        
+                      </View>
+
+
+                      
+
+                      <View style={{backgroundColor:'#e0e0e0', marginTop: 5}}>
+
+                          <View >
+                
+                
+                
+                
+
+{/* <<<<<<<<<<<<<<<Adding Drop Down<<<<<<<<<<<<<< */}
+
+
+                              <View style={{flexDirection:'row', justifyContent: 'space-around', }}>
+
+                                    <View style={{width: width*.40}}>
+                                        <Dropdown containerStyle={{height: 60, marginTop: -15}}
+                                          label='Color'
+                                          data={color}
+                                        />
+                                    </View>
+                                    <View style={{width: width*.40}}>
+                                         <Dropdown containerStyle={{height: 60, marginTop: -15}}
+                                            label='Size'
+                                            data={size}
+                                         />
+                                    </View>
+
+                              </View>
+
+
+
+
+
+
+                        
+                              <View style={{flexDirection: 'row', justifyContent: 'space-around',marginBottom: 4,}}>
+                              
+                                    <View>
+                                        <Text style={{paddingLeft: 40}}>Quantity :   {this.state.quantity}</Text>
+                                    </View>
+                                    
+                                    <View>
+                                        <TouchableOpacity style={{backgroundColor: '#e0e0e0',       height: 20, width: 25, justifyContent: 'center',        alignItems: 'center',borderRadius:20,marginTop: 1, borderColor: '#37474f', borderWidth: 2}} onPress={this.increaseQuantity}>
+
+
+
+
+{/* >>>>>>>>>Added Quantity increase and decrease by onPress method<<<<<<<<<<<<<<< */}
+
+
+                                            <Text style={{fontSize: 20, fontWeight: 'bold', marginBottom: 3}}>+</Text>
+                                      
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View>
+                                          <TouchableOpacity style={{backgroundColor: '#e0e0e0',       height: 20, width: 25, justifyContent: 'center',        alignItems: 'center',borderRadius:20,marginTop: 1, borderColor: '#37474f', borderWidth: 2,}} onPress={this.decreaseQuantity}>
+
+                                              <Text style={{fontSize: 30, fontWeight: 'bold', marginBottom: 3}}>-</Text>
+                                  
+                                          </TouchableOpacity>
+                                    </View>
+                                
+                              </View>
+
+                              
+                          </View>
+
+
+
+                          <View style={{flexDirection: 'row', justifyContent: 'space-between', marginBottom: 15}}>
+                              
+                                  <TouchableOpacity style={{backgroundColor: '#00b8d4', height: 30, width: 130, justifyContent: 'center', alignItems: 'center', marginLeft: 10}}>
+                                    <Text>ADD TO CART</Text>
+                              
+                                  </TouchableOpacity>
+                             
+                                  <TouchableOpacity style={{backgroundColor: '#00b8d4', height: 30, width: 130, justifyContent: 'center', alignItems: 'center',marginRight: 10}}>
+                                    <Text>BUY NOW</Text>
+                                  </TouchableOpacity>
+                             
+                          </View>
+
+
+                      </View>
+
+
+                      <View style={{flexDirection: 'row', justifyContent: 'space-around', marginTop: 30}}>
+
+                           <View style={{flexDirection: 'row',justifyContent: 'space-between',}}>
+                              <Text style={{color: '#ff6f00'}}>Replacement Policy</Text>
+                              <View style={{paddingLeft: 5}}>
+                                  <Entypo name={'circle-with-plus'} size={18} color='#ff6f00'/>
+                              </View>
+                           </View>
+
+                           <View style={{flexDirection: 'row',}}>
+                              <Text style={{color: '#ff6f00', }}>Refund Policy</Text>
+                              <View style={{paddingLeft: 5}}>
+                                  <Entypo name={'circle-with-plus'} size={18} color='#ff6f00'/>
+                              </View>
+                           </View>
+
+                      </View>
+
+
+                      <View style={{height: 110, marginTop: 18, marginBottom: 18}}>
+
+                            <View style={{ marginBottom: 10, alignItems:'center'}}>
+                                <Text style={{fontWeight: 'bold'}}>Similar Type Products</Text>
+                            </View>
+
+
+{/* >>>>>>>>>>>>>Similar Products By Slide Show using ScroollView<<<<<<<<<<<<<<<<< */}
+                            <ScrollView horizontal={true} pagingEnabled={true} showsButtons={true}>
+                              
+                                  {this.props.ProductState && this.props.ProductState.image.map((images, index)=>{
+                                    return(
+                                      <View key={index} style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
+                                      <Image 
+                                        style={{flex: 1, width: 100, height: 200, resizeMode: 'contain'}}
+                                        source={{uri: images}}
+                                      />
+                                      </View> 
+                                    )
+                                  })}
+                            </ScrollView>
+
+                      </View>    
+
+
+
+                      <View style={{alignItems: 'center',height: 65}}>
+                      {/* <Text>Hello</Text> */}
+                          <Dropdown containerStyle={{width: 170,height: 60, marginTop: -25 }}
+                              baseColor='#ff6f00'
+                              label='Payment Methods'
+                              // data={size}
+                          />
+                      </View>
+
+                      
+                     
+                  </ScrollView>
               </View>
 
 
@@ -208,15 +424,23 @@ class ProductsDetails extends React.Component {
       );
     }
   
-}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+}
 
-// export default Home;
+
+
+
+// >>>>>>>>>============Getting Data By Redux Using mapStateToProps==============<<<<<<<<<<<<<<<<<<
+
+
+
 function mapStateToProps(state) {
   // console.log("Hello....", state)
   return {
     ProductState: state.productDetails
   }
 }
+
+
 // function mapDispatchToProps(dispatch) {
 //   const actions = {
 //     test: () => ({type: "TEST"}),
@@ -229,7 +453,16 @@ function mapStateToProps(state) {
 //   }
 //   return bindActionCreators(actions, dispatch)
 // }
+
+
 export default connect(mapStateToProps)(ProductsDetails)
+
+
+
+
+
+//>>>>>>>>-----------CSS-------------<<<<<<<<<<<
+
 
 const styles = StyleSheet.create({
   container: {
@@ -247,25 +480,24 @@ const styles = StyleSheet.create({
   },
 
   text_element_id : {
-    fontSize: 15,
-    // textAlign: "center",
-    // color: "#FFFFFF",
+    fontSize: 17,
+    fontWeight: 'bold',
   },
 
   text_element_item : {
-    fontSize: 11,
-    // textAlign: "center",
-    // color: "#FFFFFF",
+    fontSize: 13,
   },
-  text_element_type : {
-    fontSize: 12,
+  
+  text_element_size : {
+    fontSize: 13,
+    fontWeight: 'bold',
+    paddingTop: 4,
     // textAlign: "center",
     // color: "#FFFFFF",
   },
 
   text_element_price : {
-    fontSize: 15,
-    // textAlign: "center",
+    fontSize: 16,
     color: "red",
   },
 
@@ -335,6 +567,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
 
+  },
+
+  text: {
+    color: '#fff',
+    fontSize: 30,
+    fontWeight: 'bold',
   }
 
 });

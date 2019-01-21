@@ -11,12 +11,12 @@ import { PersistGate } from 'redux-persist/integration/react'
 import {store, persistor} from '../redux/store/index'
 
 //Bottom Tab
-import Home from '../screens/Home';
+import Home from '../screens/HomeDemo';
 import Notifications from '../screens/Notifications';
 import Cart from '../screens/Cart';
 import Delivery from '../screens/Delivery';
 import Account from '../screens/Account';
-import HomeDemo from '../screens/HomeDemo'
+import HomeDemo from '../screens/Home'
 import Demo from '../screens/Demo'
 
 //Top Tab
@@ -59,7 +59,7 @@ import ProductsDetailsScreen from '../screens/ProductDetailsScreen'
 
 const ProductNavigator = createStackNavigator({
     Home: {
-      screen: HomeDemo,
+      screen: Home,
       navigationOptions: {
           header: null
       }

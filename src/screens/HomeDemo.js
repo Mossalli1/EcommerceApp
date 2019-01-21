@@ -16,9 +16,9 @@ import {connect} from 'react-redux'
 import Login from '../users/Login';
 import SignUp from '../users/SignUp';
 // import Home from '../screens/Home';
-import Cart from '../screens/Cart';
+import Cart from './Cart';
 import TabNavScreen from '../navigations/TabNavScreen';
-import HomeDemo from '../screens/HomeDemo'
+import HomeDemo from './Home'
 
 import { ManList } from '../data/Data';
 import { addProducts , productDetails } from '../redux/actions';
@@ -309,8 +309,10 @@ class Home extends React.Component<Props> {
           </View>
 
           <Modal isVisible={this.state.isModalVisible}>
-              <View style={{ height: 35,flexDirection: 'row', justifyContent:'space-between',alignSelf:"flex-end"}}>
-                <Text style={{color:'#fff', fontSize: 18, fontWeight:'bold'}}>Menu</Text>
+              <View style={{ height: 35,flexDirection: 'row', justifyContent:'space-between'}}>
+                <View style={{paddingLeft: width*.3}}>
+                  <Text style={{color:'#fff', fontSize: 18, fontWeight:'bold'}}>Menu</Text>
+                </View>
                 <TouchableOpacity onPress={this._toggleModal}>
                   <Entypo name="cross" size={30} color='#fff'/>
                 </TouchableOpacity> 
