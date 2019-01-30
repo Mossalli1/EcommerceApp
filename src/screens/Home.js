@@ -1,523 +1,432 @@
-import React from 'react';
-import { Dimensions, Button, StyleSheet, Text, View, ScrollView, Image,TouchableOpacity,TouchableWithoutFeedback } from 'react-native';
-import { Ionicons, MaterialIcons, FontAwesome, Foundation, Entypo } from '@expo/vector-icons';
-import {  Rating, List, ListItem } from 'react-native-elements';
-import {Header, Left,Container, Body, Right} from 'native-base';
+import React from "react";
+import {
+  Dimensions,
+  Button,
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+  TouchableWithoutFeedback
+} from "react-native";
+import {
+  Ionicons,
+  MaterialIcons,
+  FontAwesome,
+  Foundation,
+  Entypo
+} from "@expo/vector-icons";
+import { Rating, List, ListItem } from "react-native-elements";
+import { Header, Left, Container, Body, Right } from "native-base";
 import Modal from "react-native-modal";
-import Accordion from 'react-native-collapsible/Accordion';
+import Accordion from "react-native-collapsible/Accordion";
 // import SearchBar from 'react-native-searchbar';
-import SearchBar from 'react-native-material-design-searchbar';
-import Display from 'react-native-display';
+import SearchBar from "react-native-material-design-searchbar";
+import Display from "react-native-display";
+
+//Data Import
+import { ManList } from "../data/Data";
+import { SectionData } from "../data/ModalData";
 
 //Redux
-import {bindActionCreators} from 'redux'
-import {connect} from 'react-redux'
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import { addProducts, productDetails } from "../redux/actions";
 
-import Login from '../users/Login';
-import SignUp from '../users/SignUp';
-// import Home from '../screens/Home';
-import Cart from './Cart';
-import TabNavScreen from '../navigations/TabNavScreen';
-import HomeDemo from './Home'
-
-import { ManList } from '../data/Data';
-import { addProducts , productDetails } from '../redux/actions';
-
-
-var {width} = Dimensions.get('window');
-
-
+var { width } = Dimensions.get("window");
 
 //>>>>>>>>>>>>---------List for Modal--------<<<<<<<<<<<
 
-
-const SECTIONS = [
-  {
-    title: 'Men',
-    content: ['Shirt','Pant','Panjabi','Fotua'],
-  },
-  {
-    title: 'Women',
-    content: ['Shari','3 pcs', 'Borka',],
-  },
-  {
-    title: 'Kids',
-    content: ['Toy','Cloaths', 'Doll',],
-  },
-  {
-    title: 'Sports',
-    content: ['Football','Tennis', 'Cricket','Rugby'],
-  },
-  {
-    title: 'Bags',
-    content: ['Football','Tennis', 'Cricket','Rugby'],
-  },
-  {
-    title: 'Books',
-    content: ['Football','Tennis', 'Cricket','Rugby'],
-  },
-  {
-    title: 'Computers',
-    content: ['Football','Tennis', 'Cricket','Rugby'],
-  },
-  {
-    title: 'Electronics',
-    content: ['Mobile','Charger', 'Cable'],
-  },
-  {
-    title: 'Kitchen and Home',
-    content: ['Football','Tennis', 'Cricket','Rugby'],
-  },
-  {
-    title: 'Jwellery',
-    content: ['Football','Tennis', 'Cricket','Rugby'],
-  },
-  {
-    title: 'Health and Household',
-    content: ['Football','Tennis', 'Cricket','Rugby'],
-  },
-  {
-    title: 'Beauty and Personal Care',
-    content: ['Football','Tennis', 'Cricket','Rugby'],
-  },
-];
-
-
+const SECTIONS = SectionData;
 
 //>>>>>>>>--------Declared type Props For React Component Thats not Mandatory     uses if Necessary----------<<<<<<<<
 
-// type Props = {
-//   addProductList: (value: []) => void,
-//   ProductState: any
-// }
+type Props = {
+  addProductList: (value: []) => void,
+  ProductState: any
+};
 
-//class Home extends React.Component<Props> {
+class Home extends React.Component<Props> {
+  // class Home extends React.Component{
 
-class Home extends React.Component{
-  
-    state = {
-      enable: false,
-      enable2: true,
-      isModalVisible: false,
-      starCount: 3.5,
-      activeSections: [],
-      query: "",
-      SECTIONS,
-      results: [],
-      menList: ManList,
-    }
+  state = {
+    enable: false,
+    enable2: true,
+    isModalVisible: false,
+    starCount: 3.5,
+    activeSections: [],
+    query: "",
+    SECTIONS,
+    results: []
+  };
 
-    // _renderSectionTitle = section => {
-    //   return (
-    //     <View style={styles.content}>
-    //       {/* <Text>{section.content}</Text> */}
-    //     </View>
-    //   );
-    // };
+  // _renderSectionTitle = section => {
+  //   return (
+  //     <View style={styles.content}>
+  //       {/* <Text>{section.content}</Text> */}
+  //     </View>
+  //   );
+  // };
 
-    //>>>>>>------componentDidMount work after render           Use if necessary---------<<<<<<<<<<
+  //>>>>>>------componentDidMount work after render           Use if necessary---------<<<<<<<<<<
 
-    // componentDidMount() {
-    //   this.props.addProductList(ManList)
-    // }
+  componentDidMount() {
+    this.props.addProductList(ManList);
+  }
 
+  //>>>>>>>>>>>----------Functions fir Show-Hide Search Bar---------<<<<<<<<<
+  toggleDisplay() {
+    let toggle = !this.state.enable;
+    this.setState({ enable: toggle });
 
-    //>>>>>>>>>>>----------Functions fir Show-Hide Search Bar---------<<<<<<<<<
-    toggleDisplay() {
-      let toggle = !this.state.enable;
-      this.setState({enable: toggle});
-
-      let toggle2 = this.state.enable;
-      this.setState({enable2: toggle2});
-    }
-
-
+    let toggle2 = this.state.enable;
+    this.setState({ enable2: toggle2 });
+  }
 
   //>>>>>>>>>>>----------Start Modal Functions --------<<<<<<<<<<<<<
 
-
-    _renderHeader = section => {
-      return (
-        <View style={styles.header}>
-          <View>
-            <Text style={styles.headerText}>{section.title}</Text>
-          </View>
-          <View>
-            <Ionicons name="md-arrow-dropdown" size={20}/>
-          </View>
+  _renderHeader = section => {
+    return (
+      <View style={styles.header}>
+        <View>
+          <Text style={styles.headerText}>{section.title}</Text>
         </View>
-      );
-    };
-  
-    _renderContent = section => {
-      return (
-        <View style={styles.content}>
-          <Text>{section.content[0]}</Text>
-          <Text>{section.content[1]}</Text>
-          <Text>{section.content[2]}</Text>
-          <Text>{section.content[3]}</Text>
+        <View>
+          <Ionicons name="md-arrow-dropdown" size={20} />
         </View>
-      );
-    };
+      </View>
+    );
+  };
 
-    _updateSections = activeSections => {
-      this.setState({ activeSections });
-    };
+  _renderContent = section => {
+    return (
+      <View style={styles.content}>
+        <Text>{section.content[0]}</Text>
+        <Text>{section.content[1]}</Text>
+        <Text>{section.content[2]}</Text>
+        <Text>{section.content[3]}</Text>
+      </View>
+    );
+  };
 
-    _toggleModal = () =>
+  _updateSections = activeSections => {
+    this.setState({ activeSections });
+  };
+
+  _toggleModal = () =>
     this.setState({ isModalVisible: !this.state.isModalVisible });
 
+  //>>>>>>>>>>>---------End Modal Functions-----------<<<<<<<<<<<<<<
 
+  //>>>>>>>>>------Another Star Rating Function----------<<<<<<<<<<<
+  // onStarRatingPress(rating) {
+  //   this.setState({
+  //     starCount: rating
+  //   });
+  // }
 
-//>>>>>>>>>>>---------End Modal Functions-----------<<<<<<<<<<<<<<
+  //>>>>>>>>>>--------Search Methods----------<<<<<<<<<<<<
 
+  // _handleResults(results) {
+  //   this.setState({ results });
+  // }
 
-//>>>>>>>>>------Another Star Rating Function----------<<<<<<<<<<<
-    // onStarRatingPress(rating) {
-    //   this.setState({
-    //     starCount: rating
-    //   });
-    // }
+  // handleQueryChange = query =>
+  //     this.setState(state => ({ ...state, query: query || "" }));
 
+  // handleSearchCancel = () => this.handleQueryChange("");
+  // handleSearchClear = () => this.handleQueryChange("");
 
-    
-  
+  //>>>>>>>>>>------------Listing Products By Mapping From Data---------<<<<<<<<<<<
 
-    //>>>>>>>>>>--------Search Methods----------<<<<<<<<<<<<
-
-    // _handleResults(results) {
-    //   this.setState({ results });
-    // }
-
-    // handleQueryChange = query =>
-    //     this.setState(state => ({ ...state, query: query || "" }));
-
-    // handleSearchCancel = () => this.handleQueryChange("");
-    // handleSearchClear = () => this.handleQueryChange(""); 
-
-
-
-
-//>>>>>>>>>>------------Listing Products By Mapping From Data---------<<<<<<<<<<<
-
-
-  lapsList(){
-
-
-//Maped Here
-    return this.state.menList.map((data,i) =>{
-      return(
-            <View key={i}>
-                <TouchableOpacity onPress={()=> this.props.product_details(i)} onPressIn={()=> this.props.navigation.navigate('ProductsDetails')}>
-
-                    <View style={styles.elements}>
-                    
-                        <View style={styles.images}>
-                          <Image
-                            style={{width: 90, height: 100 ,resizeMode:"contain"}}
-                            source={{uri: data.image[0]}}
-                            // onPress={()=> this.props.product_details(i)} 
-                            // onPress={this.alt1}
-                          />
-                        </View>
-
-
-                        <View style= {styles.texes}>
-                            <Text style={styles.text_element_id}>{data.title}</Text>
-                            <Text style={styles.text_element_item}>Colors : {data.color.join(', ')}</Text>
-                            <Text style={styles.text_element_item}>Type: {data.type}</Text>
-                            <Text style={styles.text_element_price}>Price : {data.price}</Text>
-                            <View style={{}}>
-
-
-
-{/* //>>>>>>>>>------Rating Add----------<<<<<<<<<< */}
-
-                                <Rating                                               
-                                      // fractions={1}
-                                      startingValue={data.rating}
-                                      readonly
-                                      imageSize={20}
-                                      onFinishRating={this.ratingCompleted}
-                                      onStartRating={this.ratingStarted}
-                                      // style={{ paddingVertical: 10 }}
-                                /> 
-
-                             </View>
-                            
-                        </View>
-
-
-                        <View style={styles.discount}>
-                          <Image
-                            style={{width: 90, height: 50, resizeMode:"contain"}}
-                            source={require('../../assets/discount.png')}
-                            // onPress={()=> this.props.product_details(i)} 
-                            // onPress={this.alt1}
-                          />
-
-                        </View>
-
-
-                    </View>
-
-                  </TouchableOpacity>
-            </View>
-      )
-    })
-  }
-    
-  
-  
-    render() {
-      console.log("Print props===========> ", this.props)
-      this.props.addProduct()
+  productsList() {
+    //Maped Here
+    return this.props.productList.map((data, i) => {
       return (
-        
-        
-        <View style={styles.container}>
-
-        {/* //>>>>>>>>-----------Displaying Search Bar With Show Hide----------<<<<<<<<<<< */}
-
-              <Display 
-                enable={this.state.enable} 
-                enterDuration={500} 
-                exitDuration={250}
-                // exit="fadeOutLeft"
-                // enter="fadeInLeft"
-              >
-                  <View>
-                    <SearchBar
-                      // onSearchChange={() => console.log('On Search Change')}
-                      height={30}
-                      // onFocus={() => console.log('On Focus')}
-                      // onBlur={() => console.log('On Blur')}
-                      placeholder={'Search...'}
-                      // autoCorrect={false}
-                      padding={5}
-                      returnKeyType={'search'}
-                      onBackPress={this.toggleDisplay.bind(this)}
-                      // alwaysShowBackButton={true}
-                    />
-                  </View>
-              </Display>
-
-
-              <Display 
-                enable={this.state.enable2} 
-                enterDuration={500} 
-                exitDuration={250}
-                // exit="fadeOutLeft"
-                // enter="fadeInLeft"
-              >
-
-
-
-{/* >>>>>>>>>---------Header---------<<<<<<<<<< */}
-
-
-                  <Header style={styles.HeaderStyle}>
-
-                      <Left>
-                          <TouchableOpacity onPress={this._toggleModal}>
-                            <Ionicons name="ios-menu" size={30}/> 
-                          </TouchableOpacity>
-                      </Left>
-
-
-                      <Body style={{ alignItems:'center'}}>
-                          <Text style={{fontSize:18, fontWeight: 'bold'}}>New Items</Text>
-                      </Body>
-
-
-                      <Right>
-                          <View style={{paddingRight:10}}>
-                            <TouchableOpacity onPress={this.toggleDisplay.bind(this)}>
-                              <MaterialIcons name="search" size={30}/> 
-                            </TouchableOpacity>
-                          </View>
-
-                          <View>
-                            <TouchableOpacity onPress = {()=> this.props.navigation.navigate('Cart')}>
-                              <Ionicons name="md-cart" size={30}/> 
-                            </TouchableOpacity>
-                          </View>
-                      </Right>
-
-                  </Header> 
-                 
-              </Display>
-
-
-
-
-
-          <View style={{flex:4}}>
-            <ScrollView>
-              {this.lapsList()}
-            </ScrollView>
-          </View>
-
-
-
-
-{/* >>>>>>>>>>--------------Modal View---------<<<<<<<<<<< */}
-
-
-
-          <Modal isVisible={this.state.isModalVisible}>
-              <View style={{ height: 35,flexDirection: 'row', justifyContent:'space-between'}}>
-                <View style={{paddingLeft: width*.3}}>
-                  <Text style={{color:'#fff', fontSize: 18, fontWeight:'bold'}}>Menu</Text>
-                </View>
-                <TouchableOpacity onPress={this._toggleModal}>
-                  <Entypo name="cross" size={30} color='#fff'/>
-                </TouchableOpacity> 
+        <View key={i}>
+          <TouchableOpacity
+            onPress={() => this.props.product_details(i)}
+            onPressIn={() => this.props.navigation.navigate("ProductsDetails")}
+          >
+            <View style={styles.elements}>
+              <View style={styles.images}>
+                <Image
+                  style={{ width: 90, height: 100, resizeMode: "contain" }}
+                  source={{ uri: data.image[0] }}
+                  // onPress={()=> this.props.product_details(i)}
+                  // onPress={this.alt1}
+                />
               </View>
 
-              <ScrollView >
-                  <View >
-                    <Accordion
-                      sections={SECTIONS}
-                      activeSections={this.state.activeSections}
-                      // renderSectionTitle={this._renderSectionTitle}
-                      renderHeader={this._renderHeader}
-                      renderContent={this._renderContent}
-                      onChange={this._updateSections}
-                    />
-                  </View>
-                </ScrollView>
-                {/* <TouchableWithoutFeedback onPress={this._toggleModal}>
-                </TouchableWithoutFeedback> */}
-          </Modal>
+              <View style={styles.texes}>
+                <Text style={styles.text_element_id}>{data.title}</Text>
+                <Text style={styles.text_element_item}>
+                  Colors : {data.color.join(", ")}
+                </Text>
+                <Text style={styles.text_element_item}>Type: {data.type}</Text>
+                <Text style={styles.text_element_price}>
+                  Price : {data.price}
+                </Text>
+                <View style={{}}>
+                  {/* //>>>>>>>>>------Rating Add----------<<<<<<<<<< */}
 
-        
-          
+                  <Rating
+                    // fractions={1}
+                    startingValue={data.rating}
+                    readonly
+                    imageSize={20}
+                    onFinishRating={this.ratingCompleted}
+                    onStartRating={this.ratingStarted}
+                    // style={{ paddingVertical: 10 }}
+                  />
+                </View>
+              </View>
+
+              <View style={styles.discount}>
+                <Image
+                  style={{ width: 90, height: 50, resizeMode: "contain" }}
+                  source={require("../../assets/discount.png")}
+                  // onPress={()=> this.props.product_details(i)}
+                  // onPress={this.alt1}
+                />
+              </View>
+            </View>
+          </TouchableOpacity>
         </View>
       );
-    }
-  
+    });
+  }
+
+  render() {
+    // console.log("Print props===========> ", this.props);
+    // this.props.addProduct()
+    return (
+      <View style={styles.container}>
+        {/* //>>>>>>>>-----------Displaying Search Bar With Show Hide----------<<<<<<<<<<< */}
+
+        {/* <TouchableOpacity onPress={() => this.props}>
+          <Text>Test</Text>
+        </TouchableOpacity> */}
+
+        <Display
+          enable={this.state.enable}
+          enterDuration={500}
+          exitDuration={250}
+          // exit="fadeOutLeft"
+          // enter="fadeInLeft"
+        >
+          <View>
+            <SearchBar
+              // onSearchChange={() => console.log('On Search Change')}
+              height={30}
+              // onFocus={() => console.log('On Focus')}
+              // onBlur={() => console.log('On Blur')}
+              placeholder={"Search..."}
+              // autoCorrect={false}
+              padding={5}
+              returnKeyType={"search"}
+              onBackPress={this.toggleDisplay.bind(this)}
+              // alwaysShowBackButton={true}
+            />
+          </View>
+        </Display>
+
+        <Display
+          enable={this.state.enable2}
+          enterDuration={500}
+          exitDuration={250}
+          // exit="fadeOutLeft"
+          // enter="fadeInLeft"
+        >
+          {/* >>>>>>>>>---------Header With Native_Base---------<<<<<<<<<< */}
+
+          <Header style={styles.HeaderStyle}>
+            <Left>
+              <TouchableOpacity onPress={this._toggleModal}>
+                <Ionicons name="ios-menu" size={30} color="#fff" />
+              </TouchableOpacity>
+            </Left>
+
+            <Body style={{ alignItems: "flex-end" }}>
+              <Text style={{ fontSize: 18, fontWeight: "bold", color: "#fff" }}>
+                New Items
+              </Text>
+            </Body>
+
+            <Right>
+              <View style={{ paddingRight: 10 }}>
+                <TouchableOpacity onPress={this.toggleDisplay.bind(this)}>
+                  <MaterialIcons name="search" size={30} color="#fff" />
+                </TouchableOpacity>
+              </View>
+
+              <View>
+                <TouchableOpacity
+                  onPress={() => this.props.navigation.navigate("Cart2")}
+                >
+                  <Ionicons name="md-cart" size={30} color="#fff" />
+                </TouchableOpacity>
+              </View>
+            </Right>
+          </Header>
+        </Display>
+
+        {/* >>>>>>>>>>>>===========Data Inserted by Redux===========<<<<<<<<<<<< */}
+        <View style={{ flex: 4 }}>
+          <ScrollView>
+            {this.props.productList && this.productsList()}
+          </ScrollView>
+        </View>
+
+        {/* >>>>>>>>>>--------------Modal View---------<<<<<<<<<<< */}
+
+        <Modal isVisible={this.state.isModalVisible}>
+          <View
+            style={{
+              height: 35,
+              flexDirection: "row",
+              justifyContent: "space-between"
+            }}
+          >
+            <View style={{ paddingLeft: width * 0.3 }}>
+              <Text style={{ color: "#fff", fontSize: 18, fontWeight: "bold" }}>
+                Menu
+              </Text>
+            </View>
+            <TouchableOpacity onPress={this._toggleModal}>
+              <Entypo name="cross" size={30} color="#fff" />
+            </TouchableOpacity>
+          </View>
+
+          <ScrollView>
+            <View>
+              <Accordion
+                sections={SECTIONS}
+                activeSections={this.state.activeSections}
+                // renderSectionTitle={this._renderSectionTitle}
+                renderHeader={this._renderHeader}
+                renderContent={this._renderContent}
+                onChange={this._updateSections}
+              />
+            </View>
+          </ScrollView>
+          {/* <TouchableWithoutFeedback onPress={this._toggleModal}>
+                </TouchableWithoutFeedback> */}
+        </Modal>
+      </View>
+    );
+  }
 }
-
-
-
-
-
 
 // >>>>>>>>>============Sending data Using mapDispatchToProps and Getting Data Using mapStateToProps By Redux==============<<<<<<<<<<<<<<<<<<
 
-
 function mapStateToProps(state) {
   return {
-    ProductState: state.productList
-  }
+    productList: state.productList
+  };
 }
 
 function mapDispatchToProps(dispatch) {
   const actions = {
-    addProduct: (value) => ({
-      type: "Add_To_ProductDetails",
-      payload: value
-    }),
-    product_details: (index: string) => productDetails(index),
-    addProductList: (list:[]) => addProducts(list),
-  }
-  return bindActionCreators(actions, dispatch)
+    // addProduct: (value) => ({
+    //   type: "Add_To_ProductDetails",
+    //   payload: value
+    // }),
+    addProductList: (list: []) => addProducts(list),
+
+    product_details: (index: string) => productDetails(index)
+  };
+  return bindActionCreators(actions, dispatch);
 }
 
-
-export default connect(mapStateToProps, mapDispatchToProps)(Home)
-
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Home);
 
 //CSS
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: "white"
   },
 
   elements: {
     flex: 1,
-    // overflow: "visible",
-    // position: "relative",
-    // flexWrap : 'wrap',
-    // aspectRatio: 2,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    // alignItems : 'center',
-    // alignSelf: 'stretch',
-    paddingLeft: 10,
-
+    flexDirection: "row",
+    justifyContent: "space-around",
+    paddingLeft: 10
   },
 
-  text_element_id : {
+  text_element_id: {
     fontSize: 15,
-    fontWeight: 'bold'
+    fontWeight: "bold"
     // textAlign: "center",
     // color: "#FFFFFF",
   },
 
-  text_element_item : {
-    fontSize: 11,
+  text_element_item: {
+    fontSize: 11
     // textAlign: "center",
     // color: "#FFFFFF",
   },
-  text_element_type : {
-    fontSize: 12,
+  text_element_type: {
+    fontSize: 12
     // textAlign: "center",
     // color: "#FFFFFF",
   },
 
-  text_element_price : {
+  text_element_price: {
     fontSize: 15,
     // textAlign: "center",
-    color: "red",
+    color: "red"
   },
 
-  images :{
-    height : 110,
-    width : width * 0.3,
+  images: {
+    height: 110,
+    width: width * 0.3
     // marginBottom : 5,
   },
 
-  texes :{
-    height : 110,
-    width : width * 0.45,
+  texes: {
+    height: 110,
+    width: width * 0.45
     // marginBottom : 5,
     // paddingLeft: 30,
   },
 
-  discount:{
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    height : 110,
-    width : width * 0.2,
+  discount: {
+    alignItems: "center",
+    justifyContent: "flex-start",
+    height: 110,
+    width: width * 0.2,
     // backgroundColor: 'red',
-    marginBottom : 5
+    marginBottom: 5
   },
 
   myStarStyle: {
-    color: 'yellow',
-    backgroundColor: 'transparent',
-    textShadowColor: 'black',
-    textShadowOffset: {width: 1, height: 1},
-    textShadowRadius: 2,
+    color: "yellow",
+    backgroundColor: "transparent",
+    textShadowColor: "black",
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2
   },
 
   myEmptyStarStyle: {
     // tintColor: 'white',
   },
 
-  HeaderStyle:{
+  HeaderStyle: {
     height: 40,
-    backgroundColor: '#006064',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
+    backgroundColor: "#255E76",
+    alignItems: "center",
+    justifyContent: "flex-start"
   },
 
   subtitleView: {
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingLeft: 10,
     paddingTop: 5
   },
@@ -528,30 +437,26 @@ const styles = StyleSheet.create({
   },
   ratingText: {
     paddingLeft: 10,
-    color: 'grey'
+    color: "grey"
   },
 
-  header:{
-    backgroundColor: '#F5FCFF',
+  header: {
+    backgroundColor: "#F5FCFF",
     padding: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     paddingLeft: 5
     // flexWrap: 'wrap'
   },
 
-  content:{
+  content: {
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff"
   },
 
-  headerText:{
+  headerText: {
     // textAlign: 'center',
     fontSize: 16,
-    fontWeight: '500',
-
+    fontWeight: "500"
   }
-
 });
-
-

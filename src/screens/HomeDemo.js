@@ -436,7 +436,7 @@ const styles = StyleSheet.create({
 
   HeaderStyle:{
     height: 40,
-    backgroundColor: '#006064',
+    backgroundColor: '#255E76',
     alignItems: 'center',
     justifyContent: 'flex-start',
   },

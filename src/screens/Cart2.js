@@ -193,7 +193,7 @@ class Cart extends React.Component {
     );
     return (
       <View style={styles.container}>
-        {/* <Display
+        <Display
           enable={this.state.enable}
           enterDuration={500}
           exitDuration={250}
@@ -214,7 +214,7 @@ class Cart extends React.Component {
               // alwaysShowBackButton={true}
             />
           </View>
-        </Display> */}
+        </Display>
 
         <Display
           enable={this.state.enable2}
@@ -236,9 +236,7 @@ class Cart extends React.Component {
           <Header style={styles.HeaderStyle}>
             <Left>
               <TouchableOpacity
-                onPress={() =>
-                  this.props.navigation.navigate("ProductsDetails")
-                }
+                onPress={() => this.props.navigation.navigate("Home")}
               >
                 <MaterialIcons name="chevron-left" size={30} color={"#fff"} />
               </TouchableOpacity>
@@ -281,7 +279,11 @@ class Cart extends React.Component {
         >
           <TouchableOpacity
             style={styles.button}
-            onPress={() => this.props.navigation.navigate("Delivery")}
+            // onPress={() =>
+            //   this.props.addToCart(
+            //     this.props.ProductState && this.props.ProductState
+            //   )
+            // }
           >
             <Text style={{ fontWeight: "bold", color: "#fff" }}>
               Place Order
