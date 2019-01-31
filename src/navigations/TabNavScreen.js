@@ -29,6 +29,8 @@ import Men from "../screens/topTab/Men";
 import ProductsDetails from "../screens/ProductsDetails";
 import ProductsDetailsScreen from "../screens/ProductDetailsScreen";
 import HeaderLeft from "../other pages/header/HeaderLeft";
+import Login from "../users/Login";
+import SignUp from "../users/SignUp";
 
 // const getTabBarIcon = (navigation, focused, tintColor) => {
 //   const { routeName } = navigation.state;
@@ -62,7 +64,19 @@ import HeaderLeft from "../other pages/header/HeaderLeft";
 
 const ProductNavigator = createStackNavigator({
   Home: {
-    screen: Home,
+    screen: Login,
+    navigationOptions: {
+      header: null
+    }
+  },
+  SignUp: {
+    screen: SignUp,
+    navigationOptions: {
+      header: null
+    }
+  },
+  Login: {
+    screen: Login,
     navigationOptions: {
       header: null
     }
